@@ -185,8 +185,8 @@ chown root:root /etc/replicated-ptfe.conf
 chmod 0644 /etc/replicated-ptfe.conf
 
 if [[ $(< /etc/ptfe/create_schemas.sql) == none ]]; then
-    sudo apt-get update
-    sudo apt-get install postgresql-client
+    sudo apt-get -y update
+    sudo apt-get install -y postgresql-client
     
     cat > /etc/ptfe/create_schemas.sql <<EOF
 CREATE SCHEMA IF NOT EXISTS rails;
