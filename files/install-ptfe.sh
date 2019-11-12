@@ -184,6 +184,18 @@ fi
 chown root:root /etc/replicated-ptfe.conf
 chmod 0644 /etc/replicated-ptfe.conf
 
+if [[ $(< /etc/ptfe/create_schemas.sql) == none ]]; then
+    sudo apt-get update
+    sudo apt-get install postgresql-client
+    
+    cat > /etc/ptfe/create_schemas.sql <<EOF
+CREATE SCHEMA IF NOT EXISTS rails;
+CREATE SCHEMA IF NOT EXISTS vault;
+CREATE SCHEMA IF NOT EXISTS registry;
+EOF
+    PGPASSWORD=$PG_PASSWORD psql -h $PG_NETLOC -d $PG_DBNAME -U $PG_USER -f /etc/ptfe/create_schemas.sql   
+fi
+
 if [[ $(< /etc/ptfe/release-sequence) != latest ]]; then
     if [[ $(< /etc/ptfe/airgap-package-url) != none ]]; then
         /bin/cat <<EOF >/etc/replicated.conf
